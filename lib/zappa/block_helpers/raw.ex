@@ -4,7 +4,7 @@ defmodule Zappa.BlockHelpers.Raw do
 
   alias Zappa.Tag
 
-  def parse(tag) do
+  def parse(%Tag{} = tag) do
     {:ok, tag.block_contents}
   end
 end
