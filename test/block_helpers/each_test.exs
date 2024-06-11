@@ -49,7 +49,7 @@ defmodule Zappa.BlockHelpers.EachTest do
         |> Zappa.compile!()
         |> EEx.eval_string(moop: %{vocals: "Captain Beefheart", solo: "Meedeley meedeley meeee!"})
 
-      assert "solo: Meedeley meedeley meeee! vocals: Captain Beefheart" ==
+      assert "vocals: Captain Beefheart solo: Meedeley meedeley meeee!" ==
                strip_whitespace(actual)
     end
 
