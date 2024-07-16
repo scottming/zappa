@@ -79,5 +79,10 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                {:ok,
                 "<%= cond do %>\n<% not @user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
     end
+
+    test "insert" do
+      assert Zappa.Sendgrid.compile(~S|<p>Hello {{insert name "Customer"}}!|) ==
+               {:ok, ~S|<p>Hello <%= @name or "Customer" %>!|}
+    end
   end
 end

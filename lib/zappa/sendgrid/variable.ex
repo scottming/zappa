@@ -5,7 +5,7 @@ defmodule Zappa.Sendgrid.Variable do
 
   def from_options_arg(%{value: value, quoted?: quoted?}) do
     if quoted? do
-      value
+      ~s|"#{value}"|
     else
       "@#{normalize(value)}"
     end

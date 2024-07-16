@@ -14,7 +14,8 @@ defmodule Zappa.Sendgrid do
       "__escaped__" => @default_escaped_callback,
       "__unescaped__" => @default_unescaped_callback,
       "@index" => &Zappa.Helpers.Index.parse/1,
-      "@key" => &Zappa.Helpers.Key.parse/1
+      "@key" => &Zappa.Helpers.Key.parse/1,
+      "insert" => &Zappa.Sendgrid.Helpers.Insert.parse/1
     },
     block_helpers: %{
       "if" => &Zappa.Sendgrid.BlockHelpers.If.parse/1,
