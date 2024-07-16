@@ -15,7 +15,13 @@ defmodule Zappa.Sendgrid.BlockHelpers.Equals do
   end
 
   def parse(%Tag{args: [arg1, arg2], block_contents: block_contents}) do
-    {:ok,
-     ~s|<%= if (#{from_options_arg(arg1)} == #{from_options_arg(arg2)}) %>#{block_contents}<% end %>|}
+    {
+      :ok,
+      """
+      <%= cond do %>
+      <% #{from_options_arg(arg1)} == #{from_options_arg(arg2)} -> %>#{block_contents}<% true -> %><% nil %>
+      <% end %>
+      """
+    }
   end
 end

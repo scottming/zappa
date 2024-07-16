@@ -19,11 +19,16 @@ defmodule Zappa.Sendgrid do
     },
     block_helpers: %{
       "if" => &Zappa.Sendgrid.BlockHelpers.If.parse/1,
+      "unless" => &Zappa.Sendgrid.BlockHelpers.Unless.parse/1,
+      "greaterThan" => &Zappa.Sendgrid.BlockHelpers.GreaterThan.parse/1,
+      "lessThan" => &Zappa.Sendgrid.BlockHelpers.LessThan.parse/1,
+      "equals" => &Zappa.BlockHelpers.Equals.parse/1,
+      "notEquals" => &Zappa.BlockHelpers.NotEquals.parse/1,
+      "and" => &Zappa.Sendgrid.BlockHelpers.And.parse/1,
+      "or" => &Zappa.Sendgrid.BlockHelpers.Or.parse/1,
       "each" => &Zappa.BlockHelpers.Each.parse/1,
       "foreach" => &Zappa.BlockHelpers.ForEach.parse/1,
-      "raw" => &Zappa.BlockHelpers.Raw.parse/1,
-      "unless" => &Zappa.Sendgrid.BlockHelpers.Unless.parse/1,
-      "equals" => &Zappa.BlockHelpers.Equals.parse/1
+      "raw" => &Zappa.BlockHelpers.Raw.parse/1
     },
     partials: %{}
   }
