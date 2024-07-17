@@ -84,5 +84,66 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
       assert Zappa.Sendgrid.compile(~S|<p>Hello {{insert name "Customer"}}!|) ==
                {:ok, ~S|<p>Hello <%= @name or "Customer" %>!|}
     end
+
+    test "else with conditon" do
+      assert Zappa.Sendgrid.compile("""
+             {{#if user.profile.male}}
+             <p>Dear Sir</p>
+             {{else if user.profile.female}}
+             <p>Dear Madame</p>
+             {{else and cond1 cond2}}
+             <p>Dear Customer</p>
+             {{else equals var1 var2}}
+             <p>Dear equal</p>
+             {{else greaterThan var1 var2}}
+             <p>Dear greaterThan</p>
+             {{else lessThan var1 var2}}
+             <p>Dear lessThan</p>
+             {{else notEquals var1 var2}}
+             <p>Dear notEquals</p>
+             {{else or cond1 cond2}}
+             <p>Dear or</p>
+             {{else unless cond}}
+             <p>Dear unless</p>
+             {{else}}
+             <p>Dear Fallback</p>
+             {{/if}}
+             """) ==
+               {:ok,
+                """
+                <%= cond do %>
+                <% @user.profile.male -> %>
+                <p>Dear Sir</p>
+                <% @user.profile.female -> %>
+
+                <p>Dear Madame</p>
+                <% @cond1 and @cond2 -> %>
+
+                <p>Dear Customer</p>
+                <% @var1 == @var2 -> %>
+
+                <p>Dear equal</p>
+                <% @var1 > @var2 -> %>
+
+                <p>Dear greaterThan</p>
+                <% @var1 < @var2 -> %>
+
+                <p>Dear lessThan</p>
+                <% @var1 != @var2 -> %>
+
+                <p>Dear notEquals</p>
+                <% @cond1 or @cond2 -> %>
+
+                <p>Dear or</p>
+                <% not @cond -> %>
+
+                <p>Dear unless</p>
+                <% true -> %>
+                <p>Dear Fallback</p>
+                <% true -> %><% nil %>
+                <% end %>
+
+                """}
+    end
   end
 end

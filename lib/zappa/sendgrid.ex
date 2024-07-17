@@ -8,7 +8,14 @@ defmodule Zappa.Sendgrid do
 
   @default_helpers %Zappa.Helpers{
     helpers: %{
+      "else and" => &Zappa.Sendgrid.Helpers.ElseAnd.parse/1,
+      "else equals" => &Zappa.Sendgrid.Helpers.ElseEquals.parse/1,
+      "else greaterThan" => &Zappa.Sendgrid.Helpers.ElseGreaterThan.parse/1,
       "else if" => &Zappa.Sendgrid.Helpers.ElseIf.parse/1,
+      "else lessThan" => &Zappa.Sendgrid.Helpers.ElseLessThan.parse/1,
+      "else notEquals" => &Zappa.Sendgrid.Helpers.ElseNotEquals.parse/1,
+      "else or" => &Zappa.Sendgrid.Helpers.ElseOr.parse/1,
+      "else unless" => &Zappa.Sendgrid.Helpers.ElseUnless.parse/1,
       "else" => &Zappa.Sendgrid.Helpers.Else.parse/1,
       "log" => &Zappa.Helpers.Log.parse/1,
       "__escaped__" => @default_escaped_callback,
