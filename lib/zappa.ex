@@ -345,7 +345,7 @@ defmodule Zappa do
   @spec make_tag_struct(accumulator, tail, delimiter, Regex.t()) ::
           {:error, String.t()} | {:ok, %Tag{}, tail}
   defp make_tag_struct(tag_acc, tail, closing_delimiter, helper_parsing_regex) do
-    trimmed_tag_acc = String.trim(tag_acc)
+    trimmed_tag_acc = tag_acc |> String.replace(~r/\n/, " ", global: true) |> String.trim()
 
     helper_parsed_result =
       helper_parsing_regex && Regex.named_captures(helper_parsing_regex, trimmed_tag_acc)
