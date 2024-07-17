@@ -68,7 +68,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
              </p>
              """) ==
                {:ok,
-                "<p>\nHello Ben!\n<%= if (@customerCode == @winningCode) %>\nYou have a winning code.\n<% end %>\nThanks for playing.\n</p>\n"}
+                "<p>\nHello Ben!\n<%= cond do %>\n<% @customerCode == @winningCode -> %>\nYou have a winning code.\n<% true -> %><% nil %>\n<% end %>\n\nThanks for playing.\n</p>\n"}
     end
 
     # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#unless
