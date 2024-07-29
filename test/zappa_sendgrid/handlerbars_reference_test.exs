@@ -92,7 +92,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                "{{#unless user.active}}<p>Warning! Your account is suspended, please call: {{@root.supportPhone}}</p>{{/unless}}"
              ) ==
                {:ok,
-                "<%= cond do %>\n<% not @user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
+                "<%= cond do %>\n<% !@user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
     end
 
     # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#and
@@ -157,7 +157,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 <% @cond1 || @cond2 -> %>
 
                 <p>Dear or</p>
-                <% not @cond -> %>
+                <% !@cond -> %>
 
                 <p>Dear unless</p>
                 <% true -> %>
