@@ -80,6 +80,13 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 "<%= cond do %>\n<% not @user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
     end
 
+    # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#and
+    test "And" do
+      assert Zappa.Sendgrid.compile("{{#and foo bar}} baz {{/and}}") ==
+               {:ok,
+                "<%= cond do %>\n<% @foo && @bar -> %> baz <% true -> %><% nil %>\n<% end %>\n"}
+    end
+
     test "insert" do
       assert Zappa.Sendgrid.compile(~S|<p>Hello {{insert name "Customer"}}!|) ==
                {:ok, ~S|<p>Hello <%= @name or "Customer" %>!|}
@@ -117,7 +124,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 <% @user.profile.female -> %>
 
                 <p>Dear Madame</p>
-                <% @cond1 and @cond2 -> %>
+                <% @cond1 && @cond2 -> %>
 
                 <p>Dear Customer</p>
                 <% @var1 == @var2 -> %>
