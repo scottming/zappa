@@ -10,10 +10,17 @@ defmodule Zappa.Sendgrid.Helpers.Insert do
   def parse(%Tag{} = tag) do
     if length(tag.args) == 2 do
       [var_arg, default_arg] = tag.args
-      output = "<%= #{from_options_arg(var_arg)} or #{from_options_arg(default_arg)} %>"
+      default_arg = default_value(default_arg)
+      output = "<%= #{from_options_arg(var_arg)} || #{from_options_arg(default_arg)} %>"
+
       {:ok, output}
     else
       {:error, "insert block-helper requires exactly two arguments"}
     end
+  end
+
+  defp default_value(%{value: value} = arg) do
+    default = String.split(value, "default=", parts: 2) |> List.last()
+    %{arg | value: default}
   end
 end

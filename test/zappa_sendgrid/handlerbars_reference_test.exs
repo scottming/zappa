@@ -102,9 +102,16 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 "<%= cond do %>\n<% @foo && @bar -> %> baz <% true -> %><% nil %>\n<% end %>\n"}
     end
 
+    # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#insert
     test "insert" do
       assert Zappa.Sendgrid.compile(~S|<p>Hello {{insert name "Customer"}}!|) ==
-               {:ok, ~S|<p>Hello <%= @name or "Customer" %>!|}
+               {:ok, ~S(<p>Hello <%= @name || "Customer" %>!)}
+
+      assert Zappa.Sendgrid.compile(
+               ~S|<p>Hello {{insert name "default=Customer"}}! Thank you for contacting us about {{insert businessName "your business"}}.</p>|
+             ) ==
+               {:ok,
+                ~S(<p>Hello <%= @name || "Customer" %>! Thank you for contacting us about <%= @businessName || "your business" %>.</p>)}
     end
 
     test "else with conditon" do
