@@ -71,6 +71,21 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 "<p>\nHello Ben!\n<%= cond do %>\n<% @customerCode == @winningCode -> %>\nYou have a winning code.\n<% true -> %><% nil %>\n<% end %>\n\nThanks for playing.\n</p>\n"}
     end
 
+    # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#or
+    test "Or" do
+      assert Zappa.Sendgrid.compile("""
+             <p>
+             Hello Ben!
+             {{#or customerCode winningCode}}
+             You have a winning code.
+             {{/or}}
+             Thanks for playing.
+             </p>
+             """) ==
+               {:ok,
+                "<p>\nHello Ben!\n<%= cond do %>\n<% @customerCode || @winningCode -> %>\nYou have a winning code.\n<% true -> %><% nil %>\n<% end %>\n\nThanks for playing.\n</p>\n"}
+    end
+
     # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#unless
     test "Unless" do
       assert Zappa.Sendgrid.compile(
@@ -132,7 +147,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 <% @var1 != @var2 -> %>
 
                 <p>Dear notEquals</p>
-                <% @cond1 or @cond2 -> %>
+                <% @cond1 || @cond2 -> %>
 
                 <p>Dear or</p>
                 <% not @cond -> %>
