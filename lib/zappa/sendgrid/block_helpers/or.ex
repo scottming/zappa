@@ -18,7 +18,7 @@ defmodule Zappa.Sendgrid.BlockHelpers.Or do
       :ok,
       """
       <%= cond do %>
-      <% #{from_options_arg(arg1)} or #{from_options_arg(arg2)} -> %>#{block_contents}<% true -> %><% nil %>
+      <% #{from_options_arg(arg1)} || #{from_options_arg(arg2)} -> %>#{block_contents}<% true -> %><% nil %>
       <% end %>
       """
     }
