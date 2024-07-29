@@ -77,7 +77,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                "{{#unless user.active}}<p>Warning! Your account is suspended, please call: {{@root.supportPhone}}</p>{{/unless}}"
              ) ==
                {:ok,
-                "<%= cond do %>\n<% not @user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
+                "<%= cond do %>\n<% !@user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
     end
 
     test "insert" do
@@ -135,7 +135,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 <% @cond1 or @cond2 -> %>
 
                 <p>Dear or</p>
-                <% not @cond -> %>
+                <% !@cond -> %>
 
                 <p>Dear unless</p>
                 <% true -> %>

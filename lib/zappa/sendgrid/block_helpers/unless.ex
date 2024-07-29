@@ -9,7 +9,7 @@ defmodule Zappa.Sendgrid.BlockHelpers.Unless do
   def parse(%Tag{} = tag) do
     output = """
     <%= cond do %>
-    <% not #{from_options_arg(hd(tag.args))} -> %>#{tag.block_contents}<% end %>
+    <% !#{from_options_arg(hd(tag.args))} -> %>#{tag.block_contents}<% end %>
     """
 
     {:ok, output}

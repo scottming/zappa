@@ -13,6 +13,6 @@ defmodule Zappa.Sendgrid.Helpers.ElseUnless do
   end
 
   def parse(%Tag{args: [arg], block_contents: block_contents}) do
-    {:ok, "<% not #{from_options_arg(arg)} -> %>#{block_contents}\n"}
+    {:ok, "<% !#{from_options_arg(arg)} -> %>#{block_contents}\n"}
   end
 end
