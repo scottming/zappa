@@ -13,6 +13,6 @@ defmodule Zappa.Sendgrid.Helpers.ElseAnd do
   end
 
   def parse(%Tag{args: [arg1, arg2], block_contents: block_contents}) do
-    {:ok, "<% #{from_options_arg(arg1)} and #{from_options_arg(arg2)} -> %>#{block_contents}\n"}
+    {:ok, "<% #{from_options_arg(arg1)} && #{from_options_arg(arg2)} -> %>#{block_contents}\n"}
   end
 end
