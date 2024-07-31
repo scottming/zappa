@@ -21,7 +21,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
     # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#deep-object-replacement
     test "Deep object replacement" do
       assert Zappa.Sendgrid.compile(~S|<p>Hello {{user.profile.firstName}}</p>|) ==
-               {:ok, ~S|<p>Hello <%= @user.profile.firstName %></p>|}
+               {:ok, ~S|<p>Hello <%= get_in(@user, [:profile, :firstName]) %></p>|}
     end
   end
 
@@ -41,7 +41,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                """)
 
       assert tmpl ==
-               "<%= cond do %>\n<% @user.profile.male -> %>\n<p>Dear Sir</p>\n<% @user.profile.female -> %>\n\n<p>Dear Madame</p>\n<% true -> %>\n<p>Dear Customer</p>\n<% true -> %><% nil %>\n<% end %>\n\n"
+               "<%= cond do %>\n<% get_in(@user, [:profile, :male]) -> %>\n<p>Dear Sir</p>\n<% get_in(@user, [:profile, :female]) -> %>\n\n<p>Dear Madame</p>\n<% true -> %>\n<p>Dear Customer</p>\n<% true -> %><% nil %>\n<% end %>\n\n"
     end
 
     test "If" do
@@ -92,7 +92,7 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                "{{#unless user.active}}<p>Warning! Your account is suspended, please call: {{@root.supportPhone}}</p>{{/unless}}"
              ) ==
                {:ok,
-                "<%= cond do %>\n<% !@user.active -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
+                "<%= cond do %>\n<% !get_in(@user, [:active]) -> %><p>Warning! Your account is suspended, please call: <%= @supportPhone %></p><% end %>\n"}
     end
 
     # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#and
@@ -141,9 +141,9 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                {:ok,
                 """
                 <%= cond do %>
-                <% @user.profile.male -> %>
+                <% get_in(@user, [:profile, :male]) -> %>
                 <p>Dear Sir</p>
-                <% @user.profile.female -> %>
+                <% get_in(@user, [:profile, :female]) -> %>
 
                 <p>Dear Madame</p>
                 <% @cond1 && @cond2 -> %>
@@ -173,6 +173,61 @@ defmodule Zappa.Sendgrid.HandlerbarsReferenceTest do
                 <% end %>
 
                 """}
+    end
+
+    # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#basic-iterator-with-each
+    test "basic iterator with each" do
+      assert {:ok, compiled_string} =
+               """
+               <ol>
+               {{#each user.orderHistory}}
+               <li>You ordered: {{this.item}} on: {{this.date}}</li>
+               {{/each}}
+               </ol>
+               """
+               |> Zappa.Sendgrid.compile()
+
+      assert EEx.eval_string(
+               compiled_string,
+               assigns: [
+                 user: %{
+                   orderHistory: [
+                     %{date: "2/1/2018", item: "shoes"},
+                     %{date: "1/4/2017", item: "hat"}
+                   ]
+                 }
+               ]
+             ) ==
+               "<ol>\n\n  \n<li>You ordered: shoes on: 2/1/2018</li>\n\n\n  \n<li>You ordered: hat on: 1/4/2017</li>\n\n\n\n</ol>\n"
+    end
+
+    # https://www.twilio.com/docs/sendgrid/for-developers/sending-email/using-handlebars#combined-examples
+    test "combined examples" do
+      assert {:ok, compiled_string} =
+               """
+               {{#each user.story}}
+               {{#if this.male}}
+               <p>{{this.date}}</p>
+               {{else if this.female}}
+               <p>{{this.item}}</p>
+               {{/if}}
+               {{/each}}
+               """
+               |> Zappa.Sendgrid.compile()
+
+      assert EEx.eval_string(
+               compiled_string,
+               assigns: [
+                 user: %{
+                   story: [
+                     %{male: true, date: "2/1/2018", item: "shoes"},
+                     %{male: true, date: "1/4/2017", item: "hat"},
+                     %{female: true, date: "1/1/2016", item: "shirt"}
+                   ]
+                 }
+               ]
+             ) ==
+               "\n  \n\n<p>2/1/2018</p>\n\n\n\n\n  \n\n<p>1/4/2017</p>\n\n\n\n\n  \n\n\n<p>shirt</p>\n\n\n\n\n\n"
     end
   end
 end

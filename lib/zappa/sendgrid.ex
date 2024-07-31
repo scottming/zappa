@@ -33,8 +33,7 @@ defmodule Zappa.Sendgrid do
       "notEquals" => &Zappa.Sendgrid.BlockHelpers.NotEquals.parse/1,
       "and" => &Zappa.Sendgrid.BlockHelpers.And.parse/1,
       "or" => &Zappa.Sendgrid.BlockHelpers.Or.parse/1,
-      "each" => &Zappa.BlockHelpers.Each.parse/1,
-      "foreach" => &Zappa.BlockHelpers.ForEach.parse/1,
+      "each" => &Zappa.Sendgrid.BlockHelpers.Each.parse/1,
       "raw" => &Zappa.BlockHelpers.Raw.parse/1
     },
     partials: %{}
